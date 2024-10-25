@@ -46,6 +46,28 @@ Tested with:
 - PaperMod Theme
 - Other Hugo themes should work as well
 
+## Future Features
+This gallery shortcode is under active development. The following features are planned for future releases:
+
+### Planned Enhancements
+- [ ] Custom image captions in lightbox view
+- [ ] Vertical gallery layout option (images stacked)
+- [ ] Configurable grid layout (adjust number of images per row)
+- [ ] More gallery customization options
+- [ ] Separated files (CSS/JS)
+    - `gallery.css` for styling
+    - `gallery.js` for lightbox functionality
+    - `image-gallery.html` for structure
+- [ ] Markdown-style image syntax support
+
+### Want to Contribute?
+Feel free to:
+- Open issues for bug reports or feature requests
+- Submit pull requests for improvements
+- Share your ideas in the discussions
+
+Your contributions to make this gallery shortcode even better are welcome!
+
 ## License
 MIT
 
