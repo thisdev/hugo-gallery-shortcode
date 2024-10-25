@@ -73,3 +73,4 @@ MIT
 
 ## Credits
 Based on the idea from [hugocodex.org](https://hugocodex.org/add-ons/image-gallery/)
+Inspired by [nicokaiser - hugo theme gallery](https://github.com/nicokaiser/hugo-theme-gallery)
