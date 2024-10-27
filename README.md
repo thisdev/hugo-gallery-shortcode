@@ -77,5 +77,5 @@ Your contributions to make this gallery shortcode even better are welcome!
 MIT
 
 ## Credits
-Based on the idea from [hugocodex.org](https://hugocodex.org/add-ons/image-gallery/)
+Based on the idea from [hugocodex.org](https://hugocodex.org/add-ons/image-gallery/)  
 Inspired by [nicokaiser - hugo theme gallery](https://github.com/nicokaiser/hugo-theme-gallery)
