@@ -114,13 +114,16 @@
 
 <ul class="image-gallery">
 {{ range (readDir (print "static" $dir)) }}
-    {{- $imagetitle := index (split .Name ".") 0 -}}
-    <li>
-        <a href="{{ $dir }}/{{ .Name }}" title="{{ $imagetitle }}" class="gallery-image">
-            <img src="{{ $dir }}/{{ .Name }}" alt="{{ $imagetitle }}" title="{{ $imagetitle }}">
-            <span>{{ $imagetitle }}</span>
-        </a>
-    </li>
+    {{- $ext := path.Ext .Name -}}
+    {{- if in (slice ".jpg" ".jpeg" ".png" ".gif" ".webp") $ext -}}
+        {{- $imagetitle := index (split .Name ".") 0 -}}
+        <li>
+            <a href="{{ $dir }}/{{ .Name }}" title="{{ $imagetitle }}" class="gallery-image">
+                <img src="{{ $dir }}/{{ .Name }}" alt="{{ $imagetitle }}" title="{{ $imagetitle }}">
+                <span>{{ $imagetitle }}</span>
+            </a>
+        </li>
+    {{ end }}
 {{ end }}
 </ul>
 
