@@ -4,6 +4,7 @@ A lightweight, responsive image gallery shortcode for Hugo with integrated light
 
 ## Features
 - Responsive grid layout (3 images per row)
+- Supports different file types (.jpg, jpeg, .png, .gif, .webp)
 - Built-in lightbox
 - Keyboard navigation (←, →, ESC)
 - No external dependencies
@@ -50,6 +51,7 @@ Tested with:
 This gallery shortcode is under active development. The following features are planned for future releases:
 
 ### Planned Enhancements
+- [x] Check for file types (.jpg, jpeg, .png, .gif, .webp)
 - [ ] Custom image captions in lightbox view
 - [ ] Vertical gallery layout option (images stacked)
 - [ ] Configurable grid layout (adjust number of images per row)
