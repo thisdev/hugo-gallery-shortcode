@@ -21,7 +21,7 @@ A lightweight, responsive image gallery shortcode for Hugo with integrated light
 
 ## Usage
 
-1. Place your images in a directory within your `static` folder, e.g.:
+1. Place your images in any directory you want, e.g.:
 ```
 static/
 └── images/
@@ -33,7 +33,7 @@ static/
 
 2. Use the shortcode in your markdown files:
 ```markdown
-{{< image-gallery gallery_dir="/images/my-gallery" >}}
+{{< image-gallery gallery_dir="/static/images/my-gallery" >}}
 ```
 
 ## Navigation
