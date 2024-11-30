@@ -127,7 +127,7 @@
 </div>
 
 <ul class="image-gallery">
-{{ $files := readDir (print "static" $dir) }}
+{{ $files := readDir (print $dir) }}
 {{ $imageFiles := slice }}
 {{ range $files }}
     {{- $ext := path.Ext .Name -}}
