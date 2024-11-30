@@ -1,13 +1,13 @@
 <style>
     /* Gallery Grid */
     .image-gallery {
-        overflow: auto; 
+        overflow: auto;
         margin-left: -1%!important;
     }
     .image-gallery li {
-        float: left; 
-        display: block; 
-        margin: 0 0 1% 1%; 
+        float: left;
+        display: block;
+        margin: 0 0 1% 1%;
     }
     /* Dynamische Breiten je nach Bildanzahl */
     .image-gallery[data-count="2"] li { width: 49%; }
@@ -16,16 +16,16 @@
     .image-gallery[data-count="5"] li { width: 19%; }
 
     .image-gallery li a {
-        text-align: center; 
-        text-decoration: none!important; 
+        text-align: center;
+        text-decoration: none!important;
         color: #777;
         display: block;
     }
     .image-gallery li a span {
-        display: block; 
-        text-overflow: ellipsis; 
-        overflow: hidden; 
-        white-space: nowrap; 
+        display: block;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
         padding: 3px 0;
     }
     .image-gallery li a img {
@@ -53,25 +53,25 @@
         height: 100%;
         background: rgba(0, 0, 0, 0.9);
     }
-    
+
     .simple-lightbox.active {
         display: flex;
         justify-content: center;
         align-items: center;
     }
-    
+
     .lightbox-content {
         position: relative;
         max-width: 90%;
         max-height: 90vh;
     }
-    
+
     .lightbox-content img {
         max-width: 100%;
         max-height: 90vh;
         object-fit: contain;
     }
-    
+
     .lightbox-caption {
         position: absolute;
         bottom: -40px;
@@ -81,7 +81,7 @@
         text-align: center;
         padding: 10px;
     }
-    
+
     .lightbox-close {
         position: absolute;
         top: 20px;
@@ -94,7 +94,7 @@
         line-height: 30px;
         text-align: center;
     }
-    
+
     .lightbox-nav {
         position: absolute;
         top: 50%;
@@ -105,11 +105,11 @@
         padding: 20px;
         user-select: none;
     }
-    
+
     .lightbox-prev {
         left: 20px;
     }
-    
+
     .lightbox-next {
         right: 20px;
     }
@@ -127,7 +127,7 @@
 </div>
 
 <ul class="image-gallery">
-{{ $files := readDir (print $dir) }}
+{{ $files := readDir $dir }}
 {{ $imageFiles := slice }}
 {{ range $files }}
     {{- $ext := path.Ext .Name -}}
@@ -136,18 +136,35 @@
     {{ end }}
 {{ end }}
 
-{{ if and (ge (len $imageFiles) 2) (le (len $imageFiles) 5) }}
-    {{ range $imageFiles }}
-        {{- $imagetitle := index (split .Name ".") 0 -}}
+{{ range $imageFiles }}
+    {{ $imageURL := "" }}
+    {{- $imagetitle := index (split .Name ".") 0 -}}
+    {{- $filePath := printf "%s/%s" $dir .Name -}}
+
+    {{- if strings.Contains $filePath "static/" -}}
+        {{- $cleanedPath := strings.Replace $filePath "static/" "" -1 -}}
+        {{- $relativePath := $cleanedPath | urlize -}}
+        {{- $imageURL = relURL $relativePath -}}
+    {{- else if strings.Contains $filePath "content/" -}}
+        {{- $cleanedPath := strings.Replace $filePath "content/" "" -1 -}}
+        {{- $relativePath := $cleanedPath | urlize -}}
+        {{- $imageURL = relLangURL $relativePath -}}
+    {{- end -}}
+
+    {{- if $imageURL -}}
         <li>
-            <a href="{{ $dir }}/{{ .Name }}" title="{{ $imagetitle }}" class="gallery-image">
-                <img src="{{ $dir }}/{{ .Name }}" alt="{{ $imagetitle }}" title="{{ $imagetitle }}">
+            <a href="{{ $imageURL }}" title="{{ $imagetitle }}" class="gallery-image">
+                <img src="{{ $imageURL }}" alt="{{ $imagetitle }}" title="{{ $imagetitle }}">
                 <span>{{ $imagetitle }}</span>
             </a>
         </li>
+    {{ else }}
+        {{ warnf "Invalid file path: %s" $filePath }}
     {{ end }}
 {{ end }}
 </ul>
+
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -203,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // keyboard navigation
     document.addEventListener('keydown', (e) => {
         if (!lightbox.classList.contains('active')) return;
-        
+
         if (e.key === 'Escape') {
             lightbox.classList.remove('active');
         } else if (e.key === 'ArrowLeft') {
