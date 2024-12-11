@@ -33,7 +33,7 @@ static/
 
 2. Use the shortcode in your markdown files:
 ```markdown
-{{< image-gallery gallery_dir="/static/images/my-gallery" >}}
+{{< image-gallery gallery_dir="/images/my-gallery" >}}
 ```
 
 ## Navigation
