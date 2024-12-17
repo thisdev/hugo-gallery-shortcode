@@ -53,11 +53,9 @@
     .image-gallery li a img {
         width: 100%;
         aspect-ratio: 1 / 1;
-        /* Makes the container element square */
         display: block;
         border-radius: 8px;
         object-fit: cover;
-        /* Fills out the square container */
         background: #f5f5f5;
         transition: transform 0.3s ease;
     }
@@ -164,7 +162,8 @@
     {{ range $imageFiles }}
     {{- $imagetitle := index (split .Name ".") 0 -}}
     <li>
-        <a href="{{ $dir }}/{{ .Name }}" title="{{ $imagetitle }}" class="gallery-image">
+        <a href="{{ $dir }}/{{ .Name }}" title="{{ $imagetitle }}" class="gallery-image"
+            data-caption="{{ $imagetitle }}">
             <img src="{{ $dir }}/{{ .Name }}" alt="{{ $imagetitle }}" title="{{ $imagetitle }}">
             <span>{{ $imagetitle }}</span>
         </a>
@@ -182,7 +181,7 @@
         let currentIndex = 0;
         let images = [];
 
-        // Setze data-count Attribut für CSS-Styling
+        // Set data-count attribute for CSS styling
         const imageCount = gallery.querySelectorAll('.gallery-image').length;
         gallery.setAttribute('data-count', imageCount.toString());
 
@@ -190,7 +189,7 @@
         gallery.querySelectorAll('.gallery-image').forEach((link, index) => {
             images.push({
                 src: link.href,
-                title: link.title
+                title: link.getAttribute('data-caption')
             });
 
             // click event for each image
