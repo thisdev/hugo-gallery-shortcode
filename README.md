@@ -56,7 +56,7 @@ This gallery shortcode is under active development. The following features are p
 
 ### Planned Enhancements
 - [x] Check for file types (.jpg, jpeg, .png, .gif, .webp)
-- [ ] Custom image captions in lightbox view
+- [x] Custom image captions in lightbox view
 - [ ] Vertical gallery layout option (images stacked)
 - [ ] Configurable grid layout (adjust number of images per row)
 - [ ] More gallery customization options
