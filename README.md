@@ -13,7 +13,7 @@ A lightweight, responsive image gallery shortcode for Hugo with integrated light
 - Light/Dark mode support
 
 ## Screenshot (click for a live demo)
-[![hugo-gallery-shortcode-example](https://github.com/user-attachments/assets/2216d8f6-f6c8-462f-bd79-5c8c8905a2ae)](https://blog.bitlager.de/posts/tech/wip/hugo-gallery-shortcode-example/)
+[![hugo-gallery-shortcode-example](https://github.com/user-attachments/assets/2216d8f6-f6c8-462f-bd79-5c8c8905a2ae)](https://blog.bitlager.de/posts/tech/hugo-gallery-shortcode-example/)
 
 ## Installation
 1. Create a `shortcodes` directory in your Hugo project's `layouts` folder if it doesn't exist:
