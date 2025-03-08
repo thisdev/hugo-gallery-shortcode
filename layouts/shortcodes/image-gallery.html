@@ -148,7 +148,7 @@
     <div class="lightbox-nav lightbox-next">&gt;</div>
 </div>
 
-<ul class="image-gallery">
+<ul class="image-gallery" id="image-gallery{{ $dir }}">
     {{ $files := readDir (print "static" $dir) }}
     {{ $imageFiles := slice }}
     {{ range $files }}
@@ -177,7 +177,7 @@
         const lightbox = document.querySelector('.simple-lightbox');
         const lightboxImg = lightbox.querySelector('img');
         const lightboxCaption = lightbox.querySelector('.lightbox-caption');
-        const gallery = document.querySelector('.image-gallery');
+        const gallery = document.querySelector('#image-gallery{{ $dir }}');
         let currentIndex = 0;
         let images = [];
 
