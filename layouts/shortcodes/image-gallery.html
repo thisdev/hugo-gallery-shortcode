@@ -138,7 +138,7 @@
 </style>
 
 {{ $dir := .Get "gallery_dir" }}
-<div class="simple-lightbox">
+<div class="simple-lightbox" id="simple-lightbox{{ $galleryDir }}">
     <div class="lightbox-content">
         <img src="" alt="">
         <div class="lightbox-caption"></div>
@@ -174,20 +174,28 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const lightbox = document.querySelector('.simple-lightbox');
-        const lightboxImg = lightbox.querySelector('img');
-        const lightboxCaption = lightbox.querySelector('.lightbox-caption');
-        const gallery = document.querySelector('#image-gallery{{ $dir }}');
+        if (!window.lightbox) {
+            window.lightbox = {}
+        }
+        window.lightbox[{{ $galleryDir }}] = document.querySelector('#simple-lightbox{{ $galleryDir }}');
+        const lightboxImg = window.lightbox[{{ $galleryDir }}].querySelector('img');
+        const lightboxCaption = window.lightbox[{{ $galleryDir }}].querySelector('.lightbox-caption');
+        const gallery = document.querySelector('#image-gallery{{ $galleryDir }}');
         let currentIndex = 0;
-        let images = [];
 
+        if (!window[{{ .Page.Path }}]) {
+            window[{{ .Page.Path }}] = {}
+        }
+        if (!window[{{ .Page.Path }}][{{ $galleryDir }}]) {
+            window[{{ .Page.Path }}][{{ $galleryDir }}] = [];
+        }
         // Set data-count attribute for CSS styling
         const imageCount = gallery.querySelectorAll('.gallery-image').length;
         gallery.setAttribute('data-count', imageCount.toString());
 
         // collect all images
         gallery.querySelectorAll('.gallery-image').forEach((link, index) => {
-            images.push({
+            window[{{ .Page.Path }}][{{ $galleryDir }}].push({
                 src: link.href,
                 title: link.getAttribute('data-caption')
             });
@@ -202,46 +210,46 @@
 
         // show image in lightbox
         function showImage(index) {
-            lightboxImg.src = images[index].src;
-            lightboxCaption.textContent = images[index].title;
-            lightbox.classList.add('active');
+            lightboxImg.src = window[{{ .Page.Path }}][{{ $galleryDir }}][index].src;
+            lightboxCaption.textContent = window[{{ .Page.Path }}][{{ $galleryDir }}][index].title;
+            window.lightbox[{{ $galleryDir }}].classList.add('active');
         }
 
         // close button
-        lightbox.querySelector('.lightbox-close').addEventListener('click', () => {
-            lightbox.classList.remove('active');
+        window.lightbox[{{ $galleryDir }}].querySelector('.lightbox-close').addEventListener('click', () => {
+            window.lightbox[{{ $galleryDir }}].classList.remove('active');
         });
 
         // navigation
-        lightbox.querySelector('.lightbox-prev').addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + images.length) % images.length;
+        window.lightbox[{{ $galleryDir }}].querySelector('.lightbox-prev').addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + window[{{ .Page.Path }}][{{ $galleryDir }}].length) % window[{{ .Page.Path }}][{{ $galleryDir }}].length;
             showImage(currentIndex);
         });
 
-        lightbox.querySelector('.lightbox-next').addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % images.length;
+        window.lightbox[{{ $galleryDir }}].querySelector('.lightbox-next').addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % window[{{ .Page.Path }}][{{ $galleryDir }}].length;
             showImage(currentIndex);
         });
 
         // keyboard navigation
         document.addEventListener('keydown', (e) => {
-            if (!lightbox.classList.contains('active')) return;
+            if (!window.lightbox[{{ $galleryDir }}].classList.contains('active')) return;
 
             if (e.key === 'Escape') {
-                lightbox.classList.remove('active');
+                window.lightbox[{{ $galleryDir }}].classList.remove('active');
             } else if (e.key === 'ArrowLeft') {
-                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                currentIndex = (currentIndex - 1 + window[{{ .Page.Path }}][{{ $galleryDir }}].length) % window[{{ .Page.Path }}][{{ $galleryDir }}].length;
                 showImage(currentIndex);
             } else if (e.key === 'ArrowRight') {
-                currentIndex = (currentIndex + 1) % images.length;
+                currentIndex = (currentIndex + 1) % window[{{ .Page.Path }}][{{ $galleryDir }}].length;
                 showImage(currentIndex);
             }
         });
 
         // click anywhere to close lightbox
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                lightbox.classList.remove('active');
+        window.lightbox[{{ $galleryDir }}].addEventListener('click', (e) => {
+            if (e.target === window.lightbox[{{ $galleryDir }}]) {
+                window.lightbox[{{ $galleryDir }}].classList.remove('active');
             }
         });
     });
