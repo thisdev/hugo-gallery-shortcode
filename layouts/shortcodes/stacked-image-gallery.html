@@ -1,0 +1,246 @@
+<style>
+    .stacked-image-gallery {
+        position: relative;
+        max-width: 400px;
+        min-height: 400px;
+        margin: 0 auto;
+        padding: 20px 0 420px 0;
+    }
+
+    .stacked-image-gallery li {
+        list-style: none;
+        position: absolute;
+        width: 80%;
+        max-width: 300px;
+        transition: transform 0.3s ease, z-index 0.3s ease;
+    }
+
+    .stacked-image-gallery li:nth-child(1) {
+        transform: rotate(2deg) translate(0, 0);
+        z-index: 1;
+    }
+
+    .stacked-image-gallery li:nth-child(2) {
+        transform: rotate(-3deg) translate(10px, 5px);
+        z-index: 2;
+    }
+
+    .stacked-image-gallery li:nth-child(3) {
+        transform: rotate(4deg) translate(-10px, 10px);
+        z-index: 3;
+    }
+
+    .stacked-image-gallery li:nth-child(4) {
+        transform: rotate(-2deg) translate(15px, -5px);
+        z-index: 4;
+    }
+
+    .stacked-image-gallery li:nth-child(5) {
+        transform: rotate(5deg) translate(-5px, 15px);
+        z-index: 5;
+    }
+
+    .stacked-image-gallery li:hover {
+        transform: scale(1.1) translateY(-20px);
+        z-index: 10;
+    }
+
+    .stacked-image-gallery li a {
+        display: block;
+        text-decoration: none;
+        color: #777;
+        background: #fff;
+        padding: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+    }
+
+    .stacked-image-gallery li a img {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        display: block;
+        border-radius: 4px;
+        object-fit: cover;
+        background: #f5f5f5;
+    }
+
+    .stacked-image-gallery li a span {
+        display: block;
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 5px 0;
+        font-size: 14px;
+    }
+
+    .simple-lightbox {
+        display: none;
+        position: fixed;
+        z-index: 999;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+    }
+
+    .simple-lightbox.active {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .lightbox-content {
+        position: relative;
+        max-width: 90%;
+        max-height: 90vh;
+    }
+
+    .lightbox-content img {
+        max-width: 100%;
+        max-height: 90vh;
+        object-fit: contain;
+    }
+
+    .lightbox-caption {
+        position: absolute;
+        bottom: -60px;
+        left: 0;
+        right: 0;
+        color: white;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: white;
+        font-size: 30px;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+    }
+
+    .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: white;
+        font-size: 30px;
+        cursor: pointer;
+        padding: 20px;
+        user-select: none;
+    }
+
+    .lightbox-prev {
+        left: 20px;
+    }
+
+    .lightbox-next {
+        right: 20px;
+    }
+</style>
+
+{{ $dir := .Get "gallery_dir" }}
+{{ $uniqueId := printf "stacked-gallery-%s" (sha1 $dir) }}
+<div class="simple-lightbox" id="simple-lightbox-{{ $uniqueId }}">
+    <div class="lightbox-content">
+        <img src="" alt="">
+        <div class="lightbox-caption"></div>
+    </div>
+    <div class="lightbox-close">&times;</div>
+    <div class="lightbox-nav lightbox-prev">&lt;</div>
+    <div class="lightbox-nav lightbox-next">&gt;</div>
+</div>
+
+<ul class="stacked-image-gallery" id="stacked-image-gallery-{{ $uniqueId }}">
+    {{ $files := readDir (print "static" $dir) }}
+    {{ $imageFiles := slice }}
+    {{ range $files }}
+    {{- $ext := path.Ext .Name -}}
+    {{- if in (slice ".jpg" ".jpeg" ".png" ".gif" ".webp") $ext -}}
+    {{ $imageFiles = $imageFiles | append . }}
+    {{ end }}
+    {{ end }}
+
+    {{ range $imageFiles }}
+    {{- $imagetitle := index (split .Name ".") 0 -}}
+    <li>
+        <a href="{{ $dir }}/{{ .Name }}" title="{{ $imagetitle }}" class="gallery-image"
+            data-caption="{{ $imagetitle }}">
+            <img src="{{ $dir }}/{{ .Name }}" alt="{{ $imagetitle }}" title="{{ $imagetitle }}">
+            <span>{{ $imagetitle }}</span>
+        </a>
+    </li>
+    {{ end }}
+</ul>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const lightbox = document.querySelector('#simple-lightbox-{{ $uniqueId }}');
+        const lightboxImg = lightbox.querySelector('img');
+        const lightboxCaption = lightbox.querySelector('.lightbox-caption');
+        const gallery = document.querySelector('#stacked-image-gallery-{{ $uniqueId }}');
+        let currentIndex = 0;
+        let images = [];
+
+        // Collect all images
+        gallery.querySelectorAll('.gallery-image').forEach((link, index) => {
+            images.push({
+                src: link.href,
+                title: link.getAttribute('data-caption')
+            });
+
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentIndex = index;
+                showImage(currentIndex);
+            });
+        });
+
+        function showImage(index) {
+            lightboxImg.src = images[index].src;
+            lightboxCaption.textContent = images[index].title;
+            lightbox.classList.add('active');
+        }
+
+        lightbox.querySelector('.lightbox-close').addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        lightbox.querySelector('.lightbox-prev').addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage(currentIndex);
+        });
+
+        lightbox.querySelector('.lightbox-next').addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            showImage(currentIndex);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+
+            if (e.key === 'Escape') {
+                lightbox.classList.remove('active');
+            } else if (e.key === 'ArrowLeft') {
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                showImage(currentIndex);
+            } else if (e.key === 'ArrowRight') {
+                currentIndex = (currentIndex + 1) % images.length;
+                showImage(currentIndex);
+            }
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+            }
+        });
+    });
+</script>
