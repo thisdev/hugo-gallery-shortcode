@@ -4,6 +4,7 @@ A lightweight, responsive image gallery shortcode for Hugo with integrated light
 
 ## Features
 - Responsive grid layout (2-5 images per row)
+- Support for multiple galleries on one page
 - Supports different file types (.jpg, jpeg, .png, .gif, .webp)
 - Built-in lightbox
 - Keyboard navigation (←, →, ESC)
@@ -33,7 +34,13 @@ static/
 
 2. Use the shortcode in your markdown files:
 ```markdown
-{{< image-gallery gallery_dir="/images/my-gallery" >}}
+## My article
+
+### First gallery
+{{< image-gallery gallery_dir="/images/my-gallery1" >}}
+
+### Second gallery
+{{< image-gallery gallery_dir="/images/my-gallery2" >}}
 ```
 
 ## Navigation
@@ -56,7 +63,7 @@ This gallery shortcode is under active development. The following features are p
 
 ### Planned Enhancements
 - [x] Check for file types (.jpg, jpeg, .png, .gif, .webp)
-- [x] Custom image captions in lightbox view
+- [x] Custom image captions in lightbox view 
 - [ ] Vertical gallery layout option (images stacked)
 - [ ] Configurable grid layout (adjust number of images per row)
 - [ ] More gallery customization options
