@@ -5,6 +5,7 @@ A lightweight, responsive image gallery shortcode for Hugo with integrated light
 ## Features
 - Responsive grid layout (2-5 images per row)
 - Support for multiple galleries on one page
+- Stacked image gallery as a second layout option
 - Supports different file types (.jpg, jpeg, .png, .gif, .webp)
 - Built-in lightbox
 - Keyboard navigation (←, →, ESC)
@@ -13,12 +14,17 @@ A lightweight, responsive image gallery shortcode for Hugo with integrated light
 - Simple installation
 - Light/Dark mode support
 
-## Screenshot (click for a live demo)
-[![hugo-gallery-shortcode-example](https://github.com/user-attachments/assets/2216d8f6-f6c8-462f-bd79-5c8c8905a2ae)](https://blog.bitlager.de/posts/tech/hugo-gallery-shortcode-example/)
+## Click screenshots for a live demo
+
+### Screenshot 1: Image gallery
+[![hugo-gallery-shortcode-example](https://github.com/user-attachments/assets/9cd81f33-33f0-4883-9665-d15eb88580bf)](https://blog.bitlager.de/posts/tech/hugo-gallery-shortcode-example/)
+
+### Screenshot 2: Stacked image gallery
+[![hugo-gallery-shortcode-example](https://github.com/user-attachments/assets/57e1dd51-fe59-48db-8d69-35893f545845)](https://blog.bitlager.de/posts/tech/hugo-gallery-shortcode-example/)
 
 ## Installation
 1. Create a `shortcodes` directory in your Hugo project's `layouts` folder if it doesn't exist:
-2. Copy `image-gallery.html` into the `layouts/shortcodes` directory
+2. Copy `image-gallery.html` and/or `stacked-image-gallery.html` into the `layouts/shortcodes` directory
 
 ## Usage
 
