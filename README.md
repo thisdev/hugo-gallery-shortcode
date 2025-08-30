@@ -41,6 +41,9 @@ static/
 
 ### Second gallery
 {{< image-gallery gallery_dir="/images/my-gallery2" >}}
+
+### Stacked gallery
+{{< stacked-image-gallery gallery_dir="/images/my-gallery2" >}}
 ```
 
 ## Navigation
@@ -62,9 +65,6 @@ Tested with:
 This gallery shortcode is under active development. The following features are planned for future releases:
 
 ### Planned Enhancements
-- [x] Check for file types (.jpg, jpeg, .png, .gif, .webp)
-- [x] Custom image captions in lightbox view 
-- [ ] Vertical gallery layout option (images stacked)
 - [ ] Configurable grid layout (adjust number of images per row)
 - [ ] More gallery customization options
 - [ ] Separated files (CSS/JS)
