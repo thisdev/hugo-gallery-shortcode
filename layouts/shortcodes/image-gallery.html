@@ -1,5 +1,4 @@
 <style>
-    /* Gallery Grid */
     .image-gallery {
         overflow: auto;
         margin-left: -1% !important;
@@ -11,7 +10,6 @@
         margin: 0 0 1% 1%;
     }
 
-    /* Dynamic widths based on image count */
     .image-gallery[data-count="2"] li {
         width: 49%;
     }
@@ -28,7 +26,6 @@
         width: 19%;
     }
 
-    /* Override PaperMod theme link styles */
     .post-content .image-gallery a {
         box-shadow: none;
         box-decoration-break: none;
@@ -64,7 +61,6 @@
         transform: scale(1.01);
     }
 
-    /* Simple Lightbox */
     .simple-lightbox {
         display: none;
         position: fixed;
@@ -138,7 +134,8 @@
 </style>
 
 {{ $dir := .Get "gallery_dir" }}
-<div class="simple-lightbox" id="simple-lightbox{{ $galleryDir }}">
+{{ $uniqueId := printf "gallery-%s" (sha1 $dir) }}
+<div class="simple-lightbox" id="simple-lightbox-{{ $uniqueId }}">
     <div class="lightbox-content">
         <img src="" alt="">
         <div class="lightbox-caption"></div>
@@ -148,7 +145,7 @@
     <div class="lightbox-nav lightbox-next">&gt;</div>
 </div>
 
-<ul class="image-gallery" id="image-gallery{{ $dir }}">
+<ul class="image-gallery" id="image-gallery-{{ $uniqueId }}">
     {{ $files := readDir (print "static" $dir) }}
     {{ $imageFiles := slice }}
     {{ range $files }}
@@ -174,33 +171,24 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        if (!window.lightbox) {
-            window.lightbox = {}
-        }
-        window.lightbox[{{ $galleryDir }}] = document.querySelector('#simple-lightbox{{ $galleryDir }}');
-        const lightboxImg = window.lightbox[{{ $galleryDir }}].querySelector('img');
-        const lightboxCaption = window.lightbox[{{ $galleryDir }}].querySelector('.lightbox-caption');
-        const gallery = document.querySelector('#image-gallery{{ $galleryDir }}');
+        const lightbox = document.querySelector('#simple-lightbox-{{ $uniqueId }}');
+        const lightboxImg = lightbox.querySelector('img');
+        const lightboxCaption = lightbox.querySelector('.lightbox-caption');
+        const gallery = document.querySelector('#image-gallery-{{ $uniqueId }}');
         let currentIndex = 0;
+        let images = [];
 
-        if (!window[{{ .Page.Path }}]) {
-            window[{{ .Page.Path }}] = {}
-        }
-        if (!window[{{ .Page.Path }}][{{ $galleryDir }}]) {
-            window[{{ .Page.Path }}][{{ $galleryDir }}] = [];
-        }
-        // Set data-count attribute for CSS styling
+        // Set data-count for CSS styling
         const imageCount = gallery.querySelectorAll('.gallery-image').length;
         gallery.setAttribute('data-count', imageCount.toString());
 
-        // collect all images
+        // Collect all images
         gallery.querySelectorAll('.gallery-image').forEach((link, index) => {
-            window[{{ .Page.Path }}][{{ $galleryDir }}].push({
+            images.push({
                 src: link.href,
                 title: link.getAttribute('data-caption')
             });
 
-            // click event for each image
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 currentIndex = index;
@@ -208,48 +196,43 @@
             });
         });
 
-        // show image in lightbox
         function showImage(index) {
-            lightboxImg.src = window[{{ .Page.Path }}][{{ $galleryDir }}][index].src;
-            lightboxCaption.textContent = window[{{ .Page.Path }}][{{ $galleryDir }}][index].title;
-            window.lightbox[{{ $galleryDir }}].classList.add('active');
+            lightboxImg.src = images[index].src;
+            lightboxCaption.textContent = images[index].title;
+            lightbox.classList.add('active');
         }
 
-        // close button
-        window.lightbox[{{ $galleryDir }}].querySelector('.lightbox-close').addEventListener('click', () => {
-            window.lightbox[{{ $galleryDir }}].classList.remove('active');
+        lightbox.querySelector('.lightbox-close').addEventListener('click', () => {
+            lightbox.classList.remove('active');
         });
 
-        // navigation
-        window.lightbox[{{ $galleryDir }}].querySelector('.lightbox-prev').addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + window[{{ .Page.Path }}][{{ $galleryDir }}].length) % window[{{ .Page.Path }}][{{ $galleryDir }}].length;
+        lightbox.querySelector('.lightbox-prev').addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
             showImage(currentIndex);
         });
 
-        window.lightbox[{{ $galleryDir }}].querySelector('.lightbox-next').addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % window[{{ .Page.Path }}][{{ $galleryDir }}].length;
+        lightbox.querySelector('.lightbox-next').addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % images.length;
             showImage(currentIndex);
         });
 
-        // keyboard navigation
         document.addEventListener('keydown', (e) => {
-            if (!window.lightbox[{{ $galleryDir }}].classList.contains('active')) return;
+            if (!lightbox.classList.contains('active')) return;
 
             if (e.key === 'Escape') {
-                window.lightbox[{{ $galleryDir }}].classList.remove('active');
+                lightbox.classList.remove('active');
             } else if (e.key === 'ArrowLeft') {
-                currentIndex = (currentIndex - 1 + window[{{ .Page.Path }}][{{ $galleryDir }}].length) % window[{{ .Page.Path }}][{{ $galleryDir }}].length;
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
                 showImage(currentIndex);
             } else if (e.key === 'ArrowRight') {
-                currentIndex = (currentIndex + 1) % window[{{ .Page.Path }}][{{ $galleryDir }}].length;
+                currentIndex = (currentIndex + 1) % images.length;
                 showImage(currentIndex);
             }
         });
 
-        // click anywhere to close lightbox
-        window.lightbox[{{ $galleryDir }}].addEventListener('click', (e) => {
-            if (e.target === window.lightbox[{{ $galleryDir }}]) {
-                window.lightbox[{{ $galleryDir }}].classList.remove('active');
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
             }
         });
     });
